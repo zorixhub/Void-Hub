@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#090a12" />
+  <title>VOID HUB — Game Script Library</title>
+  <style>
+    :root {
+      --bg: #090a12; --panel: #111321; --panel2: #171a2b;
+      --text: #f4f5ff; --muted: #9ba2bd; --accent: #8b5cf6;
+      --accent2: #35d5ff; --line: rgba(255,255,255,.09);
+      --shadow: 0 18px 55px rgba(0,0,0,.32);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; color: var(--text); background:
+        radial-gradient(ellipse at 12% 0%, rgba(139,92,246,.18), transparent 38%),
+        radial-gradient(ellipse at 90% 10%, rgba(53,213,255,.10), transparent 32%), var(--bg);
+      font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+      min-height: 100vh;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .wrap { max-width: 1160px; margin: auto; padding: 0 22px; }
+    header { border-bottom: 1px solid var(--line); background: rgba(9,10,18,.72); backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 5; }
+    .nav { min-height: 76px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+    .brand { display:flex; align-items:center; gap:11px; font-weight:900; letter-spacing:.11em; }
+    .logo { width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(135deg,var(--accent),#4f46e5);box-shadow:0 7px 28px #8b5cf644;font-size:18px; }
+    .brand small { display:block; color:var(--muted); font-size:9px; letter-spacing:.2em; font-weight:700; margin-top:1px; }
+    .nav-right { display:flex; gap:10px; align-items:center; }
+    .pill { border:1px solid var(--line); color:var(--muted); padding:8px 12px; border-radius:999px; font-size:12px; }
+    .hero { padding:62px 0 34px; }
+    .eyebrow { color:#b9a5ff; text-transform:uppercase; font-size:11px; letter-spacing:.22em; font-weight:800; display:flex; gap:9px; align-items:center; }
+    .dot { width:7px;height:7px;border-radius:50%;background:#55e6a5;box-shadow:0 0 14px #55e6a5; }
+    h1 { font-size:clamp(38px,7vw,68px); letter-spacing:-.055em; line-height:1.02; margin:17px 0 16px; max-width:760px; }
+    h1 span { background:linear-gradient(90deg,#c4b5fd,var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .hero p { max-width:600px; color:var(--muted); font-size:16px; margin:0; }
+    .hero-bottom { margin-top:28px; display:flex; gap:12px; flex-wrap:wrap; }
+    .btn { border:1px solid var(--line); background:var(--panel2); color:var(--text); padding:11px 16px; border-radius:12px; font-weight:750; transition:.2s; }
+    .btn.primary { border:0; background:linear-gradient(135deg,var(--accent),#635bdb); box-shadow:0 8px 26px #8b5cf633; }
+    .btn:hover { transform:translateY(-2px); filter:brightness(1.12); }
+    .section-head { display:flex; align-items:end; justify-content:space-between; gap:18px; margin:26px 0 18px; }
+    h2 { margin:0; font-size:23px; letter-spacing:-.03em; }
+    .sub { color:var(--muted); font-size:13px; margin-top:4px; }
+    .search { display:flex; align-items:center; gap:9px; width:min(340px,100%); border:1px solid var(--line); background:rgba(17,19,33,.9); padding:0 13px; border-radius:13px; }
+    .search input { width:100%; background:transparent; border:0; outline:0; padding:12px 0; color:var(--text); }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; padding-bottom:58px; }
+    .game { text-align:left; position:relative; overflow:hidden; min-height:185px; border:1px solid var(--line); border-radius:20px; padding:20px; color:var(--text); background:linear-gradient(145deg,rgba(23,26,43,.98),rgba(14,16,28,.98)); box-shadow:var(--shadow); transition:transform .22s,border-color .22s; }
+    .game:hover { transform:translateY(-4px); border-color:rgba(167,139,250,.6); }
+    .game:before { content:""; position:absolute; width:150px;height:150px;right:-45px;top:-48px;border-radius:50%;background:var(--glow,rgba(139,92,246,.22));filter:blur(4px); }
+    .game-top { display:flex; justify-content:space-between; align-items:center; position:relative; }
+    .game-icon { width:48px;height:48px; display:grid;place-items:center;border-radius:15px;background:rgba(255,255,255,.07);border:1px solid var(--line);font-size:23px; }
+    .arrow { color:var(--muted); font-size:20px; }
+    .game h3 { position:relative; margin:18px 0 4px; font-size:18px; }
+    .game p { position:relative; margin:0; color:var(--muted); font-size:13px; }
+    .game-meta { position:relative; margin-top:15px; display:flex; align-items:center; gap:7px; font-size:11px; color:#c8cce0; }
+    .mini-dot { width:6px;height:6px;border-radius:50%;background:var(--accent2); }
+    .empty { grid-column:1/-1; padding:35px; border:1px dashed var(--line); border-radius:18px; text-align:center; color:var(--muted); }
+    footer { border-top:1px solid var(--line); padding:24px 0 34px; color:var(--muted); font-size:12px; }
+    .footer-inner { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+    .modal-backdrop { position:fixed; inset:0; z-index:10; display:none; align-items:center; justify-content:center; padding:20px; background:rgba(0,0,0,.7); backdrop-filter:blur(9px); }
+    .modal-backdrop.open { display:flex; }
+    .modal { width:min(700px,100%); max-height:86vh; overflow:auto; background:#101221; border:1px solid rgba(255,255,255,.13); border-radius:22px; box-shadow:0 30px 100px #0009; }
+    .modal-head { padding:22px 24px; border-bottom:1px solid var(--line); display:flex; align-items:start; justify-content:space-between; gap:16px; }
+    .modal-head h2 { font-size:25px; }
+    .modal-body { padding:22px 24px 26px; }
+    .close { border:1px solid var(--line); background:#1a1d2d; color:var(--text); width:36px;height:36px;border-radius:10px; font-size:20px; }
+    .script-list { display:grid; gap:12px; margin-top:18px; }
+    .script-card { border:1px solid var(--line); background:#171a2a; border-radius:15px; padding:16px; }
+    .script-title-row { display:flex; justify-content:space-between; align-items:start; gap:12px; }
+    .script-card h3 { margin:0; font-size:16px; }
+    .tag { display:inline-block; padding:4px 8px; border-radius:7px; color:#d5caff; background:#8b5cf626; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; }
+    .script-card p { color:var(--muted); margin:9px 0 13px; font-size:13px; }
+    .script-actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .small-btn { border:1px solid var(--line); background:#22253a; color:var(--text); border-radius:9px; padding:8px 11px; font-size:12px; font-weight:750; text-decoration:none; display:inline-block; }
+    .small-btn:hover { border-color:#8b5cf6; }
+    .no-scripts { border:1px dashed var(--line); border-radius:14px; padding:23px; color:var(--muted); text-align:center; }
+    .note { color:#a9b1cb; background:#1a1d2b; border-left:3px solid var(--accent); padding:12px 14px; border-radius:8px; font-size:12px; margin-top:16px; }
+    @media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+    @media(max-width:560px){.wrap{padding:0 15px}.nav{min-height:66px}.nav-right .pill{display:none}.hero{padding:44px 0 24px}.section-head{align-items:stretch;flex-direction:column}.grid{grid-template-columns:1fr}.game{min-height:165px}.modal-head,.modal-body{padding:18px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <div class="brand"><div class="logo">V</div><div>VOID HUB<small>GAME SCRIPT LIBRARY</small></div></div>
+    <div class="nav-right"><span class="pill">COMMUNITY LIBRARY</span><a class="btn" href="#games" style="text-decoration:none">Explore games ↘</a></div>
+  </div>
+</header>
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow"><span class="dot"></span> A library built by the community</div>
+    <h1>Find your next <span>game tool.</span></h1>
+    <p>Browse games, open a game page, and find scripts shared by the creator. Clean, fast, and free to host on GitHub Pages.</p>
+    <div class="hero-bottom">
+      <button class="btn primary" onclick="document.querySelector('#games').scrollIntoView({behavior:'smooth'})">Browse games →</button>
+      <a class="btn" href="https://github.com/" target="_blank" rel="noreferrer" style="text-decoration:none">GitHub ↗</a>
+    </div>
+  </section>
+  <section id="games">
+    <div class="section-head">
+      <div><h2>Game library</h2><div class="sub">Choose a game to view its available scripts.</div></div>
+      <label class="search"><span>⌕</span><input id="search" type="search" placeholder="Search games..." autocomplete="off" aria-label="Search games"></label>
+    </div>
+    <div class="grid" id="gameGrid"></div>
+  </section>
+</main>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> VOID HUB · Free community library</span><span>Hosted on GitHub Pages · No account required</span></div></footer>
+
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-head"><div><div class="eyebrow">GAME COLLECTION</div><h2 id="modalTitle">Game</h2><div class="sub" id="modalSubtitle"></div></div><button class="close" id="closeModal" aria-label="Close">×</button></div>
+    <div class="modal-body"><div id="scriptList"></div><div class="note">Only add scripts you have permission to share. Review downloads and links before publishing them publicly.</div></div>
+  </div>
+</div>
+
+<script>
+/*
+  HOW TO ADD YOUR OWN SCRIPTS:
+  1. Find the game in the `games` list below.
+  2. Inside its `scripts: []`, add an item like:
+     {
+       title: "My UI Library",
+       description: "A short description of what it does.",
+       category: "UI",
+       url: "https://github.com/YOUR-NAME/YOUR-REPO/blob/main/script.lua"
+     }
+  3. Commit the changes to GitHub. GitHub Pages updates the site automatically.
+  `url` should be a public GitHub page or a raw file URL.
+*/
+const games = [
+  { id:"blox-fruits", name:"Blox Fruits", icon:"🍎", desc:"Fruit powers, adventures and builds.", glow:"rgba(139,92,246,.28)", scripts:[] },
+  { id:"rivals", name:"RIVALS", icon:"🎯", desc:"Fast-paced FPS and aim-training tools.", glow:"rgba(239,68,68,.22)", scripts:[] },
+  { id:"death-ball", name:"Death Ball", icon:"⚽", desc:"Timing, practice and interface utilities.", glow:"rgba(53,213,255,.2)", scripts:[] },
+  { id:"bedwars", name:"BedWars", icon:"🛏️", desc:"Game utilities and creator tools.", glow:"rgba(245,158,11,.2)", scripts:[] },
+  { id:"adopt-me", name:"Adopt Me!", icon:"🐾", desc:"Collection trackers and helpful tools.", glow:"rgba(236,72,153,.2)", scripts:[] },
+  { id:"murder-mystery-2", name:"Murder Mystery 2", icon:"🔎", desc:"Community utilities and game guides.", glow:"rgba(168,85,247,.2)", scripts:[] },
+  { id:"king-legacy", name:"King Legacy", icon:"👑", desc:"Adventure tools and reference guides.", glow:"rgba(34,197,94,.2)", scripts:[] },
+  { id:"anime-adventures", name:"Anime Adventures", icon:"⚔️", desc:"Game resources and community tools.", glow:"rgba(249,115,22,.2)", scripts:[] },
+  { id:"pet-simulator", name:"Pet Simulator", icon:"💎", desc:"Collection helpers and trackers.", glow:"rgba(56,189,248,.2)", scripts:[] },
+  { id:"other", name:"Other Games", icon:"＋", desc:"More games and community submissions.", glow:"rgba(148,163,184,.2)", scripts:[] }
+];
+
+const grid = document.getElementById("gameGrid");
+const search = document.getElementById("search");
+const backdrop = document.getElementById("modalBackdrop");
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function renderGames(filter="") {
+  const list = games.filter(g => (g.name+" "+g.desc).toLowerCase().includes(filter.toLowerCase()));
+  grid.innerHTML = list.length ? list.map(g => `
+    <button class="game" style="--glow:${g.glow}" data-game="${esc(g.id)}">
+      <div class="game-top"><div class="game-icon">${g.icon}</div><span class="arrow">↗</span></div>
+      <h3>${esc(g.name)}</h3><p>${esc(g.desc)}</p>
+      <div class="game-meta"><span class="mini-dot"></span>${g.scripts.length} ${g.scripts.length===1?"script":"scripts"} available</div>
+    </button>`).join("") : `<div class="empty">No games match “${esc(filter)}”. Try another search.</div>`;
+  grid.querySelectorAll("[data-game]").forEach(btn => btn.addEventListener("click", () => openGame(btn.dataset.game)));
+}
+function openGame(id) {
+  const g = games.find(x => x.id === id);
+  if (!g) return;
+  document.getElementById("modalTitle").textContent = g.name;
+  document.getElementById("modalSubtitle").textContent = `${g.scripts.length} ${g.scripts.length===1?"script":"scripts"} in this collection`;
+  const area = document.getElementById("scriptList");
+  if (!g.scripts.length) {
+    area.innerHTML = `<div class="no-scripts"><div style="font-size:27px;margin-bottom:8px">⌘</div><strong>No scripts added yet</strong><p style="margin:7px 0 0;font-size:13px">The creator hasn't added scripts for this game yet. Check back later.</p></div>`;
+  } else {
+    area.innerHTML = `<div class="script-list">${g.scripts.map(s => `
+      <article class="script-card">
+        <div class="script-title-row"><h3>${esc(s.title)}</h3><span class="tag">${esc(s.category || "Script")}</span></div>
+        <p>${esc(s.description)}</p>
+        <div class="script-actions"><a class="small-btn" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">View on GitHub ↗</a></div>
+      </article>`).join("")}</div>`;
+  }
+  backdrop.classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeModal(){backdrop.classList.remove("open");document.body.style.overflow="";}
+document.getElementById("closeModal").addEventListener("click",closeModal);
+backdrop.addEventListener("click",e=>{if(e.target===backdrop)closeModal();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+search.addEventListener("input",e=>renderGames(e.target.value));
+document.getElementById("year").textContent=new Date().getFullYear();
+renderGames();
+</script>
+</body>
+</html>
